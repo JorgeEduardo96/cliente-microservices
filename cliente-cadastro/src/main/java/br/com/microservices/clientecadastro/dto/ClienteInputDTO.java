@@ -1,6 +1,8 @@
 package br.com.microservices.clientecadastro.dto;
 
 import br.com.microservices.clientecadastro.model.embeddable.Endereco;
+import br.com.microservices.clientecadastro.validaton.LevelSenha;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -15,6 +17,10 @@ public class ClienteInputDTO {
 
     @NotBlank
     private String nome;
+    @Email
+    private String email;
+    @LevelSenha
+    private String senha;
     @NotNull
     private Endereco endereco;
     @Past

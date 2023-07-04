@@ -11,7 +11,7 @@ import java.util.UUID;
 @FeignClient(name = "cliente-cadastro")
 public interface ClienteCadastroProxy {
 
-    @GetMapping("/cliente/{id}")
+    @GetMapping("/clientes/{id}")
     ClienteDTO findClienteById(@PathVariable UUID id);
 
 }

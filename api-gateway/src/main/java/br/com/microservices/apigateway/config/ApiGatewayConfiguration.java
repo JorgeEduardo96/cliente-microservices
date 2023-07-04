@@ -1,4 +1,4 @@
-package br.com.microservices.apigateway;
+package br.com.microservices.apigateway.config;
 
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
@@ -17,7 +17,7 @@ public class ApiGatewayConfiguration {
                                         .addRequestHeader("MyHeader", "MyURI")
                                         .addRequestParameter("Param", "MyValue"))
                                 .uri("http://httpbin.org:80"))
-                .route(p -> p.path("/cliente/**")
+                .route(p -> p.path("/clientes/**")
                         .uri("lb://cliente-cadastro"))
                 .route(p -> p.path("/emprestimo/**")
                         .uri("lb://cliente-emprestimo"))

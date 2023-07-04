@@ -13,6 +13,7 @@ public class ClienteDTO {
 
     private UUID id;
     private String nome;
+    private String email;
     private Endereco endereco;
     private LocalDate dataNascimento;
 }

@@ -32,6 +32,8 @@ public class ClienteService {
     private Cliente fromInputDtoToModel(ClienteInputDTO dto) {
         return Cliente.builder()
                 .nome(dto.getNome())
+                .email(dto.getEmail())
+                .senha(dto.getSenha())
                 .dataNascimento(dto.getDataNascimento())
                 .endereco(dto.getEndereco())
                 .build();
@@ -41,6 +43,7 @@ public class ClienteService {
         return ClienteDTO.builder()
                 .id(model.getId())
                 .nome(model.getNome())
+                .email(model.getEmail())
                 .dataNascimento(model.getDataNascimento())
                 .endereco(model.getEndereco())
                 .build();

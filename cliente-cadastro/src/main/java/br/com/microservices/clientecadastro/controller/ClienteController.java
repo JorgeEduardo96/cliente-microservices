@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "/cliente", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/clientes", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class ClienteController {
 
