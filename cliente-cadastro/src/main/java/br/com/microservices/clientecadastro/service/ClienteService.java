@@ -19,6 +19,7 @@ public class ClienteService {
     private final ClienteRepository repository;
 
     public ClienteDTO findById(UUID id) {
+        log.info("Pesquisando pelo id: {}", id);
         return fromModelToDto(repository.findById(id).orElseThrow(()
                 -> new NotFoundException("Cliente " + id + " não existe na base de dados.")));
     }

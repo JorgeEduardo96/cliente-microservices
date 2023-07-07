@@ -1,0 +1,76 @@
+version: '3.7'
+
+services:
+  naming-server:
+    image: jorgeeduardo96/cliente-microservices-naming-server:1.0.0-SNAPSHOT
+    ports:
+      - "8761:8761"
+    networks:
+      - custom-network
+
+  spring-cloud-config-server:
+    image: jorgeeduardo96/cliente-microservices-spring-cloud-config-server:1.0.0-SNAPSHOT
+    ports:
+      - "8888:8888"
+    networks:
+      - custom-network
+    depends_on:
+      - naming-server
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://spring-cloud-config-server:8888/health/readiness"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+  cliente-cadastro:
+    image: jorgeeduardo96/cliente-microservices-cliente-cadastro:1.0.0-SNAPSHOT
+    ports:
+      - "8081:8081"
+    networks:
+      - custom-network
+    depends_on:
+      - naming-server
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT:  http://zipkin-server:9411/api/v2/spans
+
+  cliente-emprestimo:
+    image: jorgeeduardo96/cliente-microservices-cliente-emprestimo:1.0.0-SNAPSHOT
+    command: ["/wait-for-it.sh", "spring-cloud-config-server:8888", "-t", "30", "--", "java", "-jar", "cliente-emprestimo.jar"]
+    ports:
+      - "8082:8082"
+    networks:
+      - custom-network
+    depends_on:
+      - naming-server
+      - spring-cloud-config-server
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      SPRING.PROFILES.ACTIVE: dev
+      SPRING.CONFIG.IMPORT: optional:configserver:http://spring-cloud-config-server:8888
+      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT:  http://zipkin-server:9411/api/v2/spans
+
+  api-gateway:
+    image: jorgeeduardo96/cliente-microservices-api-gateway:1.0.0-SNAPSHOT
+    ports:
+      - "8765:8765"
+    networks:
+      - custom-network
+    depends_on:
+      - naming-server
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT:  http://zipkin-server:9411/api/v2/spans
+
+  zipkin-server:
+    image: openzipkin/zipkin:2.23
+    ports:
+      - "9411:9411"
+    networks:
+      - custom-network
+
+networks:
+  custom-network:
